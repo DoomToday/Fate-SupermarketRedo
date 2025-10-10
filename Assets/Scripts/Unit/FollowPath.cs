@@ -20,7 +20,7 @@ public class FollowPath : MonoBehaviour
     private bool waitingForTrigger = true;
     private bool passedOnce = false;
 
-    public event Action OnReachedEnd;
+    public event Action<bool> OnReachedEnd;
 
     [SerializeField] private Transform finalTarget;
 
@@ -77,13 +77,13 @@ public class FollowPath : MonoBehaviour
                 currentWaypointIndex = waypoints.Count - 1;
                 passedOnce = true;
                 waitingForTrigger = true; // Wait for external trigger
-                OnReachedEnd?.Invoke();
+                OnReachedEnd?.Invoke(true);
             }
             if (currentDirection == -1 && currentWaypointIndex < 0 && passedOnce)
             {
                 currentWaypointIndex = 0;
-                enabled = false;
                 transform.gameObject.SetActive(false);
+                OnReachedEnd?.Invoke(false);
             }
         }
     }

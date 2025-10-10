@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 public class ButtonDelay : MonoBehaviour
 {
-    [SerializeField] private Button nextBuyerButton;
-    [SerializeField] private Button sendBackButton;
+    [SerializeField] private Button sellItemButton;
+    [SerializeField] private Button finishButton;
     [SerializeField] private SupermarketManager manager;
     [SerializeField] private float delay = 7f;
 
     private bool canPress = true;
 
-    public void OnNextBuyerPressed()
+    public void OnStartShiftPressed()
     {
         if (!canPress) return;
 
@@ -21,7 +21,7 @@ public class ButtonDelay : MonoBehaviour
         StartCoroutine(ButtonCooldown());
     }
 
-    public void OnSendBackPressed()
+    public void OnSellItemPressed()
     {
         if (!canPress) return;
 
@@ -33,13 +33,12 @@ public class ButtonDelay : MonoBehaviour
     private IEnumerator ButtonCooldown()
     {
         canPress = false;
-        nextBuyerButton.interactable = false;
-        sendBackButton.interactable = false;
-
+        sellItemButton.interactable = false;
+        finishButton.interactable = false;
         yield return new WaitForSeconds(delay);
 
         canPress = true;
-        nextBuyerButton.interactable = true;
-        sendBackButton.interactable = true;
+        sellItemButton.interactable = true;
+        finishButton.interactable = true;
     }
 }
