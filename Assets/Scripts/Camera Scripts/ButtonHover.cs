@@ -13,13 +13,6 @@ public class ButtonHover : MonoBehaviour, IPointerEnterHandler
         camera.SetTargetAngle(targetAngle);
         secondButton.SetActive(true);
         gameObject.SetActive(false);
-        if (showUI)
-        {
-            itemChoiceUI.SetActive(true);
-        }
-        else
-        {
-            itemChoiceUI.SetActive(false);
-        }
+        itemChoiceUI.SetActive(showUI ? true : false);
     }
 }

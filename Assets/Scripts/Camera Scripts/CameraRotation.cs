@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CameraRotation : MonoBehaviour
 {
-    float r;
+    private float r;
     [SerializeField] private float targetAngle;
 
     private void Update()

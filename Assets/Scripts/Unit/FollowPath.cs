@@ -4,18 +4,23 @@ using UnityEngine;
 
 public class FollowPath : MonoBehaviour
 {
+    private const float MIN_DISTANCE_DIFFERENCE = 0.1f;
+    private const float MIN_ROTATION_DIFFERENCE = 0.001f;
+
     private List<Transform> waypoints = new List<Transform>();
-    private float speed = 5f;
-    private float rotationSpeed = 5f;
+
+    [SerializeField] private GameObject waypointsParent; // Parent object containing all waypoint children
 
     private int currentWaypointIndex = 0;
     private int currentDirection = 1; // 1 for forward, -1 for backward
+
+    private float speed = 5f;
+    private float rotationSpeed = 5f;
+
     private bool waitingForTrigger = true;
     private bool passedOnce = false;
 
     public event Action OnReachedEnd;
-
-    [SerializeField] private GameObject waypointsParent; // Parent object containing all waypoint children
 
     [SerializeField] private Transform finalTarget;
 
@@ -31,7 +36,7 @@ public class FollowPath : MonoBehaviour
                 waypoints.Add(child);
             }
         }
-        
+
 
     }
 
@@ -64,10 +69,9 @@ public class FollowPath : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
 
-        if (Vector3.Distance(transform.position, targetWaypoint.position) < 0.1f)
+        if (Vector3.Distance(transform.position, targetWaypoint.position) < MIN_DISTANCE_DIFFERENCE)
         {
             currentWaypointIndex += currentDirection;
-
             if (currentDirection == 1 && currentWaypointIndex >= waypoints.Count)
             {
                 currentWaypointIndex = waypoints.Count - 1;
@@ -75,7 +79,6 @@ public class FollowPath : MonoBehaviour
                 waitingForTrigger = true; // Wait for external trigger
                 OnReachedEnd?.Invoke();
             }
-
             if (currentDirection == -1 && currentWaypointIndex < 0 && passedOnce)
             {
                 currentWaypointIndex = 0;
@@ -99,12 +102,10 @@ public class FollowPath : MonoBehaviour
 
         Vector3 direction = target.position - transform.position;
         direction.y = 0; // ignore vertical difference
-        if (direction.sqrMagnitude > 0.001f)
+        if (direction.sqrMagnitude > MIN_ROTATION_DIFFERENCE)
         {
             Quaternion targetRotation = Quaternion.LookRotation(direction);
-
             targetRotation *= Quaternion.Euler(forwardOffset); // Apply offset if needed
-
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }

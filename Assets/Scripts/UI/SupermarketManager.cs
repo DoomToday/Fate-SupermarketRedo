@@ -7,11 +7,15 @@ using UnityEngine;
 
 public class SupermarketManager : MonoBehaviour
 {
-    private List<GameObject> allBuyers = new List<GameObject>();
-    private List<GameObject> allFrames = new List<GameObject>();
+    private const int NO_CHOSEN_ITEM = -1;
+    private const int forwardDirection = 1;
+    private const int backwardDirection = -1;
+    private List<GameObject> allBuyersList = new List<GameObject>();
+    private List<GameObject> allFramesList = new List<GameObject>();
     private Queue<GameObject> buyerQueue = new Queue<GameObject>();
     private GameObject activeBuyer;
     [SerializeField] int timeForBuyer = 60;
+    [SerializeField] int scoreScale = 100;
 
     private int score = 0;
     private float countdown;
@@ -21,8 +25,8 @@ public class SupermarketManager : MonoBehaviour
 
     private int chosenItemIndex = -1;
 
-    [SerializeField] private GameObject buyerParent;
-    [SerializeField] private GameObject frameParent;
+    [SerializeField] private GameObject allBuyers;
+    [SerializeField] private GameObject allFrames;
 
     [SerializeField] private Dialogue dialogue;
 
@@ -36,29 +40,29 @@ public class SupermarketManager : MonoBehaviour
     {
         PauseMenu.gameUnpaused += TrySpeak;
         countdown = timeForBuyer;
-        if (buyerParent != null)
+        if (allBuyers != null)
         {
-            allBuyers.Clear();
-            foreach (Transform child in buyerParent.transform)
+            allBuyersList.Clear();
+            foreach (Transform child in allBuyers.transform)
             {
                 Debug.Log(child);
-                allBuyers.Add(child.gameObject);
+                allBuyersList.Add(child.gameObject);
             }
-            foreach (var buyer in allBuyers)
+            foreach (var buyer in allBuyersList)
             {
                 buyer.SetActive(false);
                 buyerQueue.Enqueue(buyer);
             }
         }
-        if (frameParent != null)
+        if (allFrames != null)
         {
-            allFrames.Clear();
-            foreach (Transform child in frameParent.transform)
+            allFramesList.Clear();
+            foreach (Transform child in allFrames.transform)
             {
                 Debug.Log(child);
-                allFrames.Add(child.gameObject);
+                allFramesList.Add(child.gameObject);
             }
-            foreach (var frame in allFrames)
+            foreach (var frame in allFramesList)
             {
                 frame.SetActive(false);
             }
@@ -85,7 +89,7 @@ public class SupermarketManager : MonoBehaviour
 
         activeBuyer.GetComponent<FollowPath>().OnReachedEnd += OnReachedEndTrigger;
 
-        activeBuyer.GetComponent<FollowPath>().Trigger(1);
+        activeBuyer.GetComponent<FollowPath>().Trigger(forwardDirection);
     }
 
     public void FinishCurrentBuyer()
@@ -99,12 +103,12 @@ public class SupermarketManager : MonoBehaviour
         if(chosenItemIndex == activeBuyer.GetComponent<CharacterData>().requiredItem1 || chosenItemIndex == activeBuyer.GetComponent<CharacterData>().requiredItem2 || chosenItemIndex == activeBuyer.GetComponent<CharacterData>().requiredItem3)
         {
             BuyerSpeak(activeBuyer.GetComponent<CharacterData>().phraseSatisfied);
-            score += 100;
+            score += scoreScale;
         }
         else
         {
             BuyerSpeak(activeBuyer.GetComponent<CharacterData>().phraseDisappointed);
-            score -= 100;
+            score -= scoreScale;
         }
 
         UpdateScore();
@@ -112,10 +116,10 @@ public class SupermarketManager : MonoBehaviour
 
         CashRegisterSound.Play();
 
-        activeBuyer.GetComponent<FollowPath>().Trigger(-1);
+        activeBuyer.GetComponent<FollowPath>().Trigger(backwardDirection);
         activeBuyer = null;
 
-        chosenItemIndex = -1;
+        chosenItemIndex = NO_CHOSEN_ITEM;
         DisableAllFrames();
     }
 
@@ -143,7 +147,7 @@ public class SupermarketManager : MonoBehaviour
     }
     public void DisableAllFrames()
     {
-        foreach(var frame in allFrames)
+        foreach(var frame in allFramesList)
         {
             frame.SetActive(false);
         }
@@ -183,7 +187,7 @@ public class SupermarketManager : MonoBehaviour
 
         countdown = 0;
         UpdateTimerUI(countdown);
-        chosenItemIndex = -1;
+        chosenItemIndex = NO_CHOSEN_ITEM;
         FinishCurrentBuyer();
     }
 
