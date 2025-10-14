@@ -4816,13 +4816,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 2.8070004, y: 1.439, z: 0.7199994}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: -180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23654,7 +23654,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1966539422
 Transform:
   m_ObjectHideFlags: 0
@@ -23686,6 +23686,8 @@ MonoBehaviour:
   waypointsParent: {fileID: 1431114053}
   finalTarget: {fileID: 330585546}
   forwardOffset: {x: 0, y: -90, z: 0}
+  speed: 5
+  rotationSpeed: 5
 --- !u!114 &1966539424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23700,12 +23702,54 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpeakingData
   animator: {fileID: 0}
   phrases:
-  - Kenji
-  - Ehm, I need some WEAPON in order to stop feminist forces ASAP
-  - Yup, that will do.
-  - That's USELESS FOR MY TASK, AND IT'S A WOMAN???
-  - HELLOOOO, are you still there even? I swear I've heard someone is in here
-  requiredItems: 050000000800000009000000
+  - SWAT
+  - I need independent waifus who know how to wield a weapon
+  - Excellent job, stay safe
+  - I would not come home if I were you today
+  - What kind of service is this? Can't even sell 1 item
+  requiredItems: 020000000600000007000000040000000a000000
+  phraseSets:
+  - phrases:
+    - Kenji
+    - Ehm, I need some WEAPON in order to stop feminist forces ASAP
+    - Yup, that will do.
+    - That's USELESS FOR MY TASK, AND IT'S A WOMAN???
+    - HELLOOOO, are you still there even? I swear I've heard someone is in here
+    requiredItems: 050000000800000009000000
+    hasBeenUsed: 0
+  - phrases:
+    - Kenji
+    - Hey, you got that... uh... Rider of Black? The super cute one? Yeah, that one.
+    - Aww yeah, best boy! I mean, girl. I mean... YES!
+    - This isn't cute enough! Where's the monster can?
+    - You're out of Astolfo? Do you even understand your customer base?
+    requiredItems: 06000000
+    hasBeenUsed: 0
+  - phrases:
+    - Kenji
+    - I need the little homunculus girl with the white hair. The Einzbern one.
+    - Yes! She's perfect for my collection. Thank you!
+    - This isn't an Einzbern... are you even listening?
+    - What, you don't have her? This place is a joke.
+    requiredItems: 01000000
+    hasBeenUsed: 0
+  - phrases:
+    - Kenji
+    - I'm on a quest to collect every blonde knight you have. What can you offer
+      me?
+    - Another fine addition to my golden-haired army!
+    - Purple hair? Get this out of my sight. It ruins the aesthetic.
+    - You... you have NO blonde knights? My quest is stalled!
+    requiredItems: 0200000007000000
+    hasBeenUsed: 0
+  - phrases:
+    - Kenji
+    - I want the saddest girl! The one who just wants to be loved... probably a Berserker.
+    - My heart... I will protect her. Thank you.
+    - This one looks way too cheerful. I need more tragedy!
+    - You have failed the lonely ones.
+    requiredItems: 0a000000
+    hasBeenUsed: 0
 --- !u!1 &1967450957
 GameObject:
   m_ObjectHideFlags: 0
@@ -34771,7 +34815,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1270100054871621318
 Transform:
   m_ObjectHideFlags: 0
@@ -37135,7 +37179,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1572859134140207490
 Transform:
   m_ObjectHideFlags: 0
@@ -63598,6 +63642,51 @@ MonoBehaviour:
   - I would not come home if I were you today
   - What kind of service is this? Can't even sell 1 item
   requiredItems: 020000000600000007000000040000000a000000
+  phraseSets:
+  - phrases:
+    - SWAT
+    - I need independent waifus who know how to wield a weapon
+    - Excellent job, stay safe
+    - I would not come home if I were you today
+    - What kind of service is this? Can't even sell 1 item
+    requiredItems: 020000000600000007000000040000000a000000
+    hasBeenUsed: 0
+  - phrases:
+    - SWAT
+    - I require a figure of the one true King of Knights. The one who wielded the
+      Sword of Promised Victory.
+    - For Avalon! She is as magnificent as the legends say!
+    - This is a pretender to the throne! Heresy!
+    - To leave without my king... a sad day indeed.
+    requiredItems: 07000000
+    hasBeenUsed: 0
+  - phrases:
+    - SWAT
+    - Gimme something... married. Yin and Yang. A pair of blades that are stronger
+      together.
+    - Yes... I am the bone of my sword. These will do.
+    - This is only one thing! I need a pair!
+    - My projections are failing... I needed the real deal.
+    requiredItems: 08000000
+    hasBeenUsed: 0
+  - phrases:
+    - SWAT
+    - Enough with the magic swords. I need a replica of a reliable, modern sidearm.
+      Something... tactical.
+    - Now this is a weapon. Solid Snake would approve.
+    - Is this a glowing toy sword? I'm not a child.
+    - You'd think a shop like this would have at least one realistic firearm...
+    requiredItems: 09000000
+    hasBeenUsed: 0
+  - phrases:
+    - SWAT
+    - I'm looking to buy a new figurine today. Just... show me any of them. I'll
+      decide if I like it.
+    - Ah yes, this will look wonderful in my display case.
+    - This is a weapon! I collect people, not their accessories!
+    - You have no more figurines? A sad day for collectors.
+    requiredItems: 09000000
+    hasBeenUsed: 0
 --- !u!114 &5195830303843869702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63613,6 +63702,8 @@ MonoBehaviour:
   waypointsParent: {fileID: 1431114053}
   finalTarget: {fileID: 330585546}
   forwardOffset: {x: 0, y: 0, z: 0}
+  speed: 5
+  rotationSpeed: 5
 --- !u!1 &5201922635131982305
 GameObject:
   m_ObjectHideFlags: 0
@@ -65535,6 +65626,8 @@ MonoBehaviour:
   waypointsParent: {fileID: 1431114053}
   finalTarget: {fileID: 330585546}
   forwardOffset: {x: 0, y: 0, z: 0}
+  speed: 5
+  rotationSpeed: 5
 --- !u!114 &5493351465238871744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65549,12 +65642,56 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpeakingData
   animator: {fileID: 5493351465238871739}
   phrases:
-  - Cyber Girl
-  - Hmmm, do you have some plushies in stock maybe?
-  - Yippee!!!
-  - tf is this kys
-  - Rude bithc, ignoring me like that!
-  requiredItems: 03000000
+  - SWAT
+  - I need independent waifus who know how to wield a weapon
+  - Excellent job, stay safe
+  - I would not come home if I were you today
+  - What kind of service is this? Can't even sell 1 item
+  requiredItems: 020000000600000007000000040000000a000000
+  phraseSets:
+  - phrases:
+    - Cyber Girl
+    - Hmmm, do you have some plushies in stock maybe?
+    - Yippee!!!
+    - tf is this kys
+    - Rude bitch, ignoring me like that!
+    requiredItems: 03000000
+    hasBeenUsed: 0
+  - phrases:
+    - Cyber Girl
+    - Hello, my child wants a... 'Franken-steen' doll? The one from that cartoon
+      who grunts a lot?
+    - Oh, this must be her. She looks... nice. I hope he likes it. Thank you.
+    - No, no, she's supposed to have stitches and a big hammer thingy.
+    - Oh dear, I suppose I'll have to find something else for his birthday.
+    requiredItems: 0a000000
+    hasBeenUsed: 0
+  - phrases:
+    - Cyber Girl
+    - I'm looking for the Saber of Red. The Knight of Treachery!
+    - Clarent Blood Arthur! She's perfect!
+    - Wrong Saber! I wanted the one with the rebellious streak, not the goody-two-shoes!
+    - No Mordred? My rebellion against my father is postponed.
+    requiredItems: 02000000
+    hasBeenUsed: 0
+  - phrases:
+    - Cyber Girl
+    - I'm looking for the purple-haired Rider from the Fifth Holy Grail War. The
+      one with the blindfold.
+    - Perfection. She's just as beautiful and mysterious as I'd hoped.
+    - No, not that Rider! I wanted the one who turns people to stone!
+    - To leave without Medusa... a petrifying thought.
+    requiredItems: 04000000
+    hasBeenUsed: 0
+  - phrases:
+    - Cyber Girl
+    - I don't need the figure, I just want the legendary sword itself. The one that
+      shoots beams.
+    - The Sword of Promised Victory! It's even more beautiful up close.
+    - This is a person! I just wanted the weapon!
+    - You can't have the king without her sword! Where is it?
+    requiredItems: 05000000
+    hasBeenUsed: 0
 --- !u!1 &5497906698660360987
 GameObject:
   m_ObjectHideFlags: 0
@@ -70171,14 +70308,14 @@ GameObject:
   - component: {fileID: 598095271828409366}
   - component: {fileID: 6822092172625548911}
   - component: {fileID: 6822092172625548910}
-  - component: {fileID: 6822092172625548909}
+  - component: {fileID: 6822092172625548912}
   m_Layer: 0
   m_Name: Ch32_nonPBR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &6195506817743224954
 GameObject:
   m_ObjectHideFlags: 0
@@ -74582,26 +74719,6 @@ Transform:
   - {fileID: 5948634365579940213}
   m_Father: {fileID: 1968590066}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6822092172625548909
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6189951410182933718}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c802fb88a9a4e5b4a82e2ce98ad56bd1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpeakingData
-  animator: {fileID: 598095271828409366}
-  phrases:
-  - Dummy
-  - Purple... Purple!.?
-  - Purple!
-  - '[WRONG ITEM DETECTED, NEXT EXTERMINATION TARGET SET]'
-  - '[IGNORE DETECTED, NEXT EXTERMINATION TARGET SET]'
-  requiredItems: 0100000004000000
 --- !u!114 &6822092172625548910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74617,6 +74734,8 @@ MonoBehaviour:
   waypointsParent: {fileID: 1431114053}
   finalTarget: {fileID: 330585546}
   forwardOffset: {x: 0, y: 0, z: 0}
+  speed: 5
+  rotationSpeed: 5
 --- !u!114 &6822092172625548911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74631,6 +74750,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   animator: {fileID: 598095271828409366}
   movementThreshold: 0.01
+--- !u!114 &6822092172625548912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6189951410182933718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c802fb88a9a4e5b4a82e2ce98ad56bd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpeakingData
+  animator: {fileID: 598095271828409366}
+  phrases:
+  - SWAT
+  - I need independent waifus who know how to wield a weapon
+  - Excellent job, stay safe
+  - I would not come home if I were you today
+  - What kind of service is this? Can't even sell 1 item
+  requiredItems: 020000000600000007000000040000000a000000
+  phraseSets:
+  - phrases:
+    - Dummy
+    - Purple... Purple!.?
+    - Purple!
+    - '[WRONG ITEM DETECTED, NEXT EXTERMINATION TARGET SET]'
+    - '[IGNORE DETECTED, NEXT EXTERMINATION TARGET SET]'
+    requiredItems: 0100000004000000
+    hasBeenUsed: 0
+  - phrases:
+    - Dummy
+    - Femboy!>
+    - Femboy!>!!>
+    - '[WRONG ITEM DETECTED, NEXT EXTERMINATION TARGET SET]'
+    - '[IGNORE DETECTED, NEXT EXTERMINATION TARGET SET]'
+    requiredItems: 06000000
+    hasBeenUsed: 0
+  - phrases:
+    - Dummy
+    - SWORD!#%51
+    - Sword ^_^
+    - '[WRONG ITEM DETECTED, NEXT EXTERMINATION TARGET SET]'
+    - '[IGNORE DETECTED, NEXT EXTERMINATION TARGET SET]'
+    requiredItems: 0500000007000000
+    hasBeenUsed: 0
 --- !u!1 &6828082249540305878
 GameObject:
   m_ObjectHideFlags: 0
