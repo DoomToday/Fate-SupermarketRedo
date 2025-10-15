@@ -24,6 +24,7 @@ public class SupermarketManager : MonoBehaviour
     private float countdown;
 
     [SerializeField] TextMeshProUGUI scoreText;
+    [SerializeField] TextMeshProUGUI finalScoreText;
     [SerializeField] TextMeshProUGUI timerText;
     [SerializeField] GameObject sellButton;
 
@@ -196,6 +197,7 @@ public class SupermarketManager : MonoBehaviour
     public void UpdateScore()
     {
         scoreText.text = "Score: " + score;
+        finalScoreText.text = "Final score: " + score;
     }
 
     public void StartTimer()
@@ -219,7 +221,7 @@ public class SupermarketManager : MonoBehaviour
 
     private IEnumerator TimerRoutine()
     {
-        while (countdown > 0)
+        while (countdown > 1)
         {
             countdown -= Time.deltaTime;
             UpdateTimerUI(countdown);
