@@ -6,6 +6,9 @@ public class PauseMenu : MonoBehaviour
 {
     public static bool GameIsPaused = false;
 
+    private const int stoppedTimeScale = 0;
+    private const int normalTimeScale = 1;
+
     [SerializeField] private GameObject pauseMenuUI;
     [SerializeField] private GameObject removedUI;
     [SerializeField] private GameObject gameFinishedUI;
@@ -19,36 +22,33 @@ public class PauseMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if(GameIsPaused)
-            {
-                Resume();
-            } else
-            {
-                Pause();
-            }
+            TogglePause();
         }
     }
-    public void Resume()
+    public void TogglePause()
     {
-        pauseMenuUI.SetActive(false);
-        removedUI.SetActive(true);
-        Time.timeScale = 1f;
-        GameIsPaused = false;
-        gameUnpaused?.Invoke();
-    }
-    public void Pause()
-    {
-        pauseMenuUI.SetActive(true);
-        removedUI.SetActive(false);
-        Time.timeScale = 0f;
-        GameIsPaused = true;
+        if (GameIsPaused)
+        {
+            pauseMenuUI.SetActive(false);
+            removedUI.SetActive(true);
+            Time.timeScale = normalTimeScale;
+            GameIsPaused = false;
+            gameUnpaused?.Invoke();
+        }
+        else
+        {
+            pauseMenuUI.SetActive(true);
+            removedUI.SetActive(false);
+            Time.timeScale = stoppedTimeScale;
+            GameIsPaused = true;
+        }
     }
 
     public void LoadMenu()
     {
         Debug.Log("Loading menu...");
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(0);
+        Time.timeScale = normalTimeScale;
+        SceneManager.LoadScene(Constants.SCENE_MAIN_MENU);
     }
     public void QuitGame()
     {

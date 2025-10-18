@@ -1,31 +1,39 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SupermarketManager : MonoBehaviour
 {
-    private List<GameObject> allBuyers = new List<GameObject>();
-    private List<GameObject> allFrames = new List<GameObject>();
-    private Queue<GameObject> buyerQueue = new Queue<GameObject>();
+    private const int NO_CHOSEN_ITEM = -1;
+    private const int FORWARD_DIRECTION = 1;
+    private const int BACKWARD_DIRECTION = -1;
+
+    private List<GameObject> allBuyersList = new List<GameObject>();
+    private List<Outline> allGlowsList = new List<Outline>();
+    private List<GameObject> availableBuyers = new List<GameObject>();
     private GameObject activeBuyer;
+
     [SerializeField] int timeForBuyer = 60;
+    [SerializeField] int timeBeforeNewBuyer = 2;
+    [SerializeField] int scoreScale = 100;
 
     private int score = 0;
     private float countdown;
 
     [SerializeField] TextMeshProUGUI scoreText;
+    [SerializeField] TextMeshProUGUI finalScoreText;
     [SerializeField] TextMeshProUGUI timerText;
+    [SerializeField] GameObject sellButton;
 
     private int chosenItemIndex = -1;
 
-    [SerializeField] private GameObject buyerParent;
-    [SerializeField] private GameObject frameParent;
+    [SerializeField] private GameObject allBuyers;
+    [SerializeField] private GameObject allGlows;
 
     [SerializeField] private Dialogue dialogue;
-
     [SerializeField] private AudioSource CashRegisterSound;
 
     private Coroutine timerCoroutine;
@@ -36,56 +44,72 @@ public class SupermarketManager : MonoBehaviour
     {
         PauseMenu.gameUnpaused += TrySpeak;
         countdown = timeForBuyer;
-        if (buyerParent != null)
+
+        if (allBuyers != null)
         {
-            allBuyers.Clear();
-            foreach (Transform child in buyerParent.transform)
+            allBuyersList.Clear();
+            foreach (Transform buyer in allBuyers.transform)
             {
-                Debug.Log(child);
-                allBuyers.Add(child.gameObject);
-            }
-            foreach (var buyer in allBuyers)
-            {
-                buyer.SetActive(false);
-                buyerQueue.Enqueue(buyer);
-            }
-        }
-        if (frameParent != null)
-        {
-            allFrames.Clear();
-            foreach (Transform child in frameParent.transform)
-            {
-                Debug.Log(child);
-                allFrames.Add(child.gameObject);
-            }
-            foreach (var frame in allFrames)
-            {
-                frame.SetActive(false);
+                allBuyersList.Add(buyer.gameObject);
+                buyer.gameObject.SetActive(false);
             }
         }
 
+        if (allGlows != null)
+        {
+            allGlowsList.Clear();
+            foreach (Transform glow in allGlows.transform)
+            {
+                Debug.Log(glow);
+                allGlowsList.Add(glow.GetComponent<Outline>());
+            }
+
+            foreach (var glow in allGlowsList)
+            {
+                glow.enabled = false;
+            }
+        }
     }
+
     public void CallNextBuyer()
     {
-        if (activeBuyer != null)
+        if (availableBuyers.Count == 0)
         {
-            Debug.Log("Current buyer is still active!");
+            Debug.Log("All buyers have been used, resetting...");
+            ResetBuyerPool();
             return;
         }
 
-        if (buyerQueue.Count == 0)
-        {
-            Debug.Log("No more buyers in the queue.");
-            gameFinished?.Invoke();
-            return;
-        }
+        // Pick a random buyer
+        int randomIndex = UnityEngine.Random.Range(0, availableBuyers.Count);
+        activeBuyer = availableBuyers[randomIndex];
+        availableBuyers.RemoveAt(randomIndex);
 
-        activeBuyer = buyerQueue.Dequeue();
+        activeBuyer.GetComponent<FollowPath>().ResetPath();
         activeBuyer.SetActive(true);
-
         activeBuyer.GetComponent<FollowPath>().OnReachedEnd += OnReachedEndTrigger;
+        activeBuyer.GetComponent<FollowPath>().Trigger(FORWARD_DIRECTION);
+    }
 
-        activeBuyer.GetComponent<FollowPath>().Trigger(1);
+    private void ResetBuyerPool()
+    {
+        availableBuyers = new List<GameObject>(allBuyersList);
+        ShuffleList(availableBuyers);
+        activeBuyer = null;
+
+        foreach (var buyer in allBuyersList)
+            buyer.SetActive(false);
+
+        CallNextBuyer();
+    }
+
+    private void ShuffleList<T>(List<T> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            int rand = UnityEngine.Random.Range(i, list.Count);
+            (list[i], list[rand]) = (list[rand], list[i]);
+        }
     }
 
     public void FinishCurrentBuyer()
@@ -96,15 +120,20 @@ public class SupermarketManager : MonoBehaviour
             return;
         }
 
-        if(chosenItemIndex == activeBuyer.GetComponent<CharacterData>().requiredItem1 || chosenItemIndex == activeBuyer.GetComponent<CharacterData>().requiredItem2 || chosenItemIndex == activeBuyer.GetComponent<CharacterData>().requiredItem3)
+        if (activeBuyer.GetComponent<CharacterData>().requiredItems.Contains(chosenItemIndex))
         {
-            BuyerSpeak(activeBuyer.GetComponent<CharacterData>().phraseSatisfied);
-            score += 100;
+            BuyerSpeak((int)Constants.PhraseType.Satisfied);
+            score += scoreScale;
+        }
+        else if (chosenItemIndex == NO_CHOSEN_ITEM)
+        {
+            BuyerSpeak((int)Constants.PhraseType.NoItem);
+            score -= scoreScale;
         }
         else
         {
-            BuyerSpeak(activeBuyer.GetComponent<CharacterData>().phraseDisappointed);
-            score -= 100;
+            BuyerSpeak((int)Constants.PhraseType.Disappointed);
+            score -= scoreScale;
         }
 
         UpdateScore();
@@ -112,45 +141,63 @@ public class SupermarketManager : MonoBehaviour
 
         CashRegisterSound.Play();
 
-        activeBuyer.GetComponent<FollowPath>().Trigger(-1);
-        activeBuyer = null;
-
-        chosenItemIndex = -1;
-        DisableAllFrames();
+        activeBuyer.GetComponent<FollowPath>().Trigger(BACKWARD_DIRECTION);
+        Debug.Log(activeBuyer);
+        chosenItemIndex = NO_CHOSEN_ITEM;
+        DisableAllGlows();
     }
 
-    private void OnReachedEndTrigger() 
+    private void OnReachedEndTrigger(bool forward)
     {
-        BuyerSpeak(activeBuyer.GetComponent<CharacterData>().phraseBuying);
-        StartTimer();
+        if (forward)
+        {
+            BuyerSpeak((int)Constants.PhraseType.Buying);
+            StartTimer();
+            sellButton.SetActive(true);
+        }
+        else
+        {
+            dialogue.Clear();
+            activeBuyer.GetComponent<FollowPath>().OnReachedEnd -= OnReachedEndTrigger;
+            activeBuyer.SetActive(false);
+            activeBuyer = null;
+            StartCoroutine(WaitBeforeNewBuyer(timeBeforeNewBuyer));
+        }
     }
 
     public void TrySpeak()
     {
-        if(activeBuyer != null)
+        if (activeBuyer != null)
         {
-            BuyerSpeak(activeBuyer.GetComponent<CharacterData>().phraseBuying);
+            BuyerSpeak((int)Constants.PhraseType.Buying);
         }
     }
 
-    public void BuyerSpeak(string phrase)
+    public void BuyerSpeak(int phraseID)
     {
-         dialogue.Say(phrase, activeBuyer.GetComponent<CharacterData>().characterName);
+        dialogue.Say(
+            activeBuyer.GetComponent<CharacterData>().phrases.ElementAt(phraseID),
+            activeBuyer.GetComponent<CharacterData>().phrases.ElementAt(Constants.NAME)
+        );
     }
+
     public void SetChosenItem(int index)
     {
         chosenItemIndex = index;
     }
-    public void DisableAllFrames()
+
+    public void DisableAllGlows()
     {
-        foreach(var frame in allFrames)
+        foreach (var glow in allGlowsList)
         {
-            frame.SetActive(false);
+            glow.enabled = false;
         }
     }
+
     public void UpdateScore()
     {
         scoreText.text = "Score: " + score;
+        finalScoreText.text = "Final score: " + score;
     }
 
     public void StartTimer()
@@ -174,7 +221,7 @@ public class SupermarketManager : MonoBehaviour
 
     private IEnumerator TimerRoutine()
     {
-        while (countdown > 0)
+        while (countdown > 1)
         {
             countdown -= Time.deltaTime;
             UpdateTimerUI(countdown);
@@ -183,12 +230,23 @@ public class SupermarketManager : MonoBehaviour
 
         countdown = 0;
         UpdateTimerUI(countdown);
-        chosenItemIndex = -1;
+        chosenItemIndex = NO_CHOSEN_ITEM;
         FinishCurrentBuyer();
+    }
+
+    private IEnumerator WaitBeforeNewBuyer(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        CallNextBuyer();
     }
 
     private void UpdateTimerUI(float time)
     {
         timerText.text = $"Time: {Mathf.FloorToInt(time % 60):00}";
+    }
+
+    public void EndGame()
+    {
+        gameFinished?.Invoke();
     }
 }
